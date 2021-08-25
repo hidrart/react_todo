@@ -1,5 +1,0 @@
-const TaskForm = () => {
-	return <form action='sumbit'></form>;
-};
-
-export default TaskForm;

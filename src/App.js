@@ -3,13 +3,11 @@ import Button from './components/Button';
 import Tasks from './components/Tasks';
 import {useState} from 'react';
 import {PlusCircleIcon} from '@heroicons/react/solid';
+import {XCircleIcon} from '@heroicons/react/solid';
+import TaskForm from './components/TaskForm';
 
 function App() {
 	const name = 'Rafli';
-	const task = 3;
-	const onClick = (e) => {
-		console.log(e);
-	};
 	const [tasks, setTasks] = useState([
 		{
 			id: 1,
@@ -31,6 +29,14 @@ function App() {
 		},
 	]);
 
+	const [display, setDisplay] = useState(false);
+
+	const addTask = (task) => {
+		const id = tasks.length + 1;
+		const newTask = {id, ...task};
+		setTasks([...tasks, newTask]);
+	};
+
 	const onDeleted = (id) => {
 		setTasks(tasks.filter((task) => task.id !== id));
 	};
@@ -47,26 +53,33 @@ function App() {
 		<div className='h-screen bg-gray-200'>
 			<Header></Header>
 			<section className='flex flex-col h-full p-5 space-y-5 font-body'>
-				<div className='flex flex-row justify-between p-5 bg-white rounded-lg'>
-					<div>
-						<h1 className='font-semibold text-md'>Hello {name}</h1>
-						<p className='text-sm text-gray-400'>
-							{task !== 0
-								? `You have ${
-										tasks.filter(
-											(task) => task.status === false
-										).length
-								  } tasks now, make sure to complete them`
-								: 'You have no task'}
-						</p>
+				<div className='w-full p-5 bg-white rounded-lg '>
+					<div className='flex flex-row justify-between'>
+						<div>
+							<h1 className='font-semibold text-md'>
+								Hello {name}
+							</h1>
+							<p className='text-sm text-gray-400'>
+								{`You have ${
+									tasks.filter(
+										(task) => task.status === false
+									).length
+								} tasks now, make sure to complete them`}
+							</p>
+						</div>
+						<div>
+							<Button
+								name={
+									!display ? (
+										<PlusCircleIcon className='w-4 h-4 text-white'></PlusCircleIcon>
+									) : (
+										<XCircleIcon className='w-4 h-4 text-white'></XCircleIcon>
+									)
+								}
+								onClick={(e) => setDisplay(!display)}></Button>
+						</div>
 					</div>
-					<div>
-						<Button
-							name={
-								<PlusCircleIcon className='w-4 h-4 text-white'></PlusCircleIcon>
-							}
-							onClick={onClick}></Button>
-					</div>
+					{display && <TaskForm onAdd={addTask}></TaskForm>}
 				</div>
 				<div
 					className={`${
